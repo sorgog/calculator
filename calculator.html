@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>calculator</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body,body>div{
+            height:100%;
+        }
+
+        body>div{
+            position: relative;
+            width:100%;
+            background: -moz-linear-gradient(#61c6f2, #8684d8); 
+            /* Safari 4-5, Chrome 1-9 */ 
+            background: -webkit-gradient(linear,top,from(#61c6f2),to(#8684d8));
+            /* Safari 5.1+, Chrome 10+ */
+            background: -webkit-linear-gradient(top, #61c6f2, #8684d8);
+            /* Opera 11.10+ */
+            background: -o-linear-gradient(top, #61c6f2, #8684d8);
+        }
+        .calculator{
+            width:303px;
+            height:535px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left:-152px;
+            margin-top:-263px;
+            border-radius: 15px;
+            background-color: #f2f2f2;
+            
+            
+        }
+        #topNum{
+            width:269px;
+            height:178px;
+            margin: 0 auto;
+            color:#60a9ca;
+            font-size: 51px;
+            text-align: right;
+            line-height: 250px;
+            overflow: hidden;
+        }
+        ul{
+            display: inline-block;
+            width: 100%;
+            list-style: none;
+            text-align: center;
+            
+        }
+        li{
+            display: inline-block;
+            width:54px;
+            height: 54px;
+            background-color: #f7f7f7;
+            margin:8px;
+            line-height: 54px;
+            border-radius: 50%;
+            box-shadow: 0 7px 10px rgba(104,187,224,.1);
+            font-size: 20px;
+            color: #61c6f2;
+        }
+        li:nth-child(4),li:nth-child(8),li:nth-child(12),li:nth-child(16),li:nth-child(19){
+            font-size: 28px;
+            color: white;
+            vertical-align: bottom;
+            background-color: #5cc5f4;
+            box-shadow: 0 7px 10px rgba(92,197,244,.6);
+        }
+        li:nth-child(19){
+            width:122px;
+            border-radius: 35px;
+            margin-left:15px;
+        }
+    </style>
+</head>
+<body>
+   
+    <div>
+         <div class="calculator">
+             <div id="topNum">0</div>
+             <ul>
+                 <li onclick="clearNum()">C</li>
+                 <li onclick="plusMinus()">+/-</li>
+                 <li onclick="mod()">%</li>
+                 <li onclick="divide()">÷</li>
+                 <li onclick="input(7)">7</li>
+                 <li onclick="input(8)">8</li>
+                 <li onclick="input(9)">9</li>
+                 <li onclick="multiply()">×</li>
+                 <li onclick="input(4)">4</li>
+                 <li onclick="input(5)">5</li>
+                 <li onclick="input(6)">6</li>
+                 <li onclick="minus()">-</li>
+                 <li onclick="input(1)">1</li>
+                 <li onclick="input(2)">2</li>
+                 <li onclick="input(3)">3</li>
+                 <li onclick="plus()">+</li>
+                 <li onclick="input(0)">0</li>
+                 <li onclick="dot('.')">.</li>
+                 <li onclick="equal()">=</li>
+             </ul>
+         </div>
+    </div>
+    <script>
+         var str = '';//第一次
+         var strSec = '';//第二次输入
+         var state = 0;//储存第几次点击
+         var operation = 0;//储存运算符
+//         var equ = '';//结果
+         var topNum = document.getElementById("topNum");
+         var liList = document.getElementsByTagName("li");
+         //获取输入
+         function input(num){
+             if(state == 0){
+                 if(str.length >= 9){
+                     str = str;
+                     return;
+                 }else{
+                     (str == '' && num == 0)? topNum.innerHTML = '0' : topNum.innerHTML = (str += String(num));   
+                 }            
+             }else{
+                 if(strSec.length >= 9){
+                     strSec = strSec;
+                     return;
+                 }else{
+                    (strSec == '' && num == 0)? topNum.innerHTML = '0' : topNum.innerHTML = (strSec += String(num));    
+                 } 
+             } 
+         }
+         //点 
+         function dot(num){
+             if(state == 0){
+                 str = topNum.innerHTML;
+                 if(str.indexOf('.') == -1){
+                     (str == '0')? str = '0.' : str += num;
+                 }else{
+                     str = str;
+                 }
+             }else{
+                 strSec = topNum.innerHTML;
+                 if(strSec.indexOf('.') == -1){
+                     (strSec == '0')? strSec = '0.' : strSec += num;
+                 }else{
+                     strSec = strSec;
+                 }
+             }
+             
+             input('');
+         }
+         ///方法及运算
+         //清空
+        function clearNum(){
+            topNum.innerHTML = '0';
+            str = '';
+            strSec = '';
+            state = 0;
+        }
+         //正负
+         function plusMinus(){
+             if(state == 0){
+                 if(topNum.innerHTML == '0'){
+                     str = '-';
+                     topNum.innerHTML = str;
+                 }else{
+                     str = topNum.innerHTML;
+                     str = -str;
+                     topNum.innerHTML = str;
+                 }
+                 
+             }else{
+                 if(strSec == ''){
+                     strSec = '-';
+                     topNum.innerHTML = strSec;
+                 }else{
+                     strSec = -strSec;
+                     topNum.innerHTML = strSec;     
+                 }
+                 
+                 
+             }
+         }
+         //百分数
+         function mod(){
+             if(state == 0){
+                 if(topNum.innerHTML == '0'){
+                     topNum.innerHTML = '0';
+                 }else{
+                     str = topNum.innerHTML;
+                     str = str/100;
+                     topNum.innerHTML = str;
+                 }
+
+             }else{
+                 if(strSec == ''){
+                     topNum.innerHTML = str;
+                 }else{
+                     strSec = strSec/100;
+                     topNum.innerHTML = strSec;     
+                 }
+
+
+             }
+         }
+         //除
+         function divide(){
+             ope();
+             operation = 4;
+             state = 1;
+         }
+         //乘
+         function multiply(){
+             ope();
+             operation = 3;
+             state = 1;
+         }
+         //减
+         function minus(){
+             ope();
+             operation = 2;
+             state = 1;
+         }
+         //加
+         function plus(){
+             ope();
+             operation = 1;
+             state = 1;
+         }
+         
+         //运算
+         function ope(){
+           if(str == '' && strSec == ''){
+               str = topNum.innerHTML;
+           }else{
+               switch(operation){
+                   case 1:
+                       str = Number(str) + Number(strSec);
+                       break;
+                   case 2:
+                       str = Number(str) - Number(strSec);
+                       break;
+                   case 3:
+                       (strSec == '') ? str = Number(str) * 1 : str = Number(str) * Number(strSec); 
+                       break;
+                   case 4:
+                       (strSec == '') ? str = Number(str) / 1 : str = Number(str) / Number(strSec);   
+                       break;
+                   default:
+                       return false;
+               }
+               /////字符显示容错处理
+               str = str.toString();
+               if( str=='NaN' ){
+                   str = '出现问题';
+               }else if( str == 'Infinity' || str == '-Infinity' ){
+                   str = '数字太大';
+               }else if( str.length > 9){     //字符超出处理
+                  str = Number(str);
+                  if(str > 999999999){
+                     str = str.toExponential(2);
+                  }else{                      //避免最后一位为小数点
+                     str = str.toString();
+                     str = str.substr(0,9);
+                     if(str.indexOf('.') == 8){
+                        str = str.substr(0,8);
+                         
+                     }
+                  }
+              };
+               topNum.innerHTML = str;
+               strSec = '';
+           }
+         }
+         //等于
+         function equal(){
+             ope();
+             str = '';
+             operation = 0;
+             state = 0;
+        }
+         //动效
+        for(var i in liList){
+            liList[i].onmousedown = function(){
+                this.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+            }
+            if(i==3||i==7||i==11||i==15||i==18){
+                liList[i].onmouseup = function(){
+                    this.style.boxShadow = '0 7px 10px rgba(92,197,244,.6)';
+                }
+            }else{
+                liList[i].onmouseup = function(){
+                    this.style.boxShadow = '0 7px 10px rgba(104,187,224,.1)';
+                }             
+            }
+        }
+
+           
+
+        
+        
+        
+    </script>
+</body>
+</html>
